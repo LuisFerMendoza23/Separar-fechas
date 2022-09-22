@@ -23,12 +23,13 @@ Para determinar si un año es bisiesto, siga estos pasos:
 */
 //------------------------------------------------------------------------------------------------------
 #include <iostream>
-#include <cstring>
+#include <string.h>
+#include <stdlib.h>
 using namespace std;
 
 class Date{
     private: //Atributos
-        int Day, Month, Year;
+        int Day, Month, Year, Bisiesto;
     public: //Metodos
         Date(char date[11]){ //Constructor
             char *p;            
@@ -41,9 +42,10 @@ class Date{
     		p = strtok(NULL, "/");//Valida que haya un / (delimitador) despues del string
         }
         void validaciones(){
-        	if(Year >2000 && Year <2100){
+        	if(Year >1999 && Year <2100){
         		anioBisiesto();
         		if(Month >0 && Month <13){
+					validarMonth();
         			if(Day >0 && Day <32){
         				showDate();
 					}
@@ -60,14 +62,143 @@ class Date{
 			}
 		}
 		void anioBisiesto(){
-			if(Year %4 == 0 && Year %100 == 0 && Year %400 == 0){
-				cout<<"El anio "<<Year<<" es bisiesto"<<endl;
+			if(Year %4 == 0){
+				if(Year %100 ==0){
+					if(Year %400 == 0){
+						cout<<endl;
+						cout<<"El anio "<<Year<<" es bisiesto"<<endl;
+						Bisiesto = 1; 
+					}
+					else{
+						cout<<endl;
+						cout<<"El anio "<<Year<<" no es bisiesto"<<endl;
+						Bisiesto = 2;
+					}
+				}
+				else{
+					cout<<endl;
+					cout<<"El anio "<<Year<<" es bisiesto"<<endl;
+					Bisiesto = 1; 
+				}				
 			}
 			else{
+				cout<<endl;
 				cout<<"El anio "<<Year<<" no es bisiesto"<<endl;
+				Bisiesto = 2;
+			}
+		}
+		void validarMonth(){
+			if(Month<0){
+				Month = 1;
+			}
+			else if(Month >12){
+				Month = 12;
+			}switch(Month){
+				case 1: //ENERO
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >31){
+						Day = 31;
+					}
+				break;
+				case 2: //FEBRERO
+					if(Bisiesto = 1){
+						if(Day >29){
+							Day = 29;
+						}
+					}
+					else if(Bisiesto = 2){
+						if(Day > 28){
+							Day = 28;
+						}
+					}
+				break;
+				case 3: //MARZO
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >31){
+						Day = 31;
+					}
+				break;
+				case 4: //ABRIL
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >30){
+						Day = 30;
+					}
+				break;
+				case 5: //MAYO
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >31){
+						Day = 31;
+					}
+				break;
+				case 6: //JUNIO
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >30){
+						Day = 30;
+					}
+				break;
+				case 7: //JULIO
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >31){
+						Day = 31;
+					}
+				break;
+				case 8: //AGOSTO
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >31){
+						Day = 31;
+					}
+				break;
+				case 9: //SEPTIEMBRE
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >30){
+						Day = 30;
+					}
+				break;
+				case 10: //OCTUBRE
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >31){
+						Day = 31;
+					}
+				break;
+				case 11: //NOVIEMBRE
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >30){
+						Day = 30;
+					}
+				break;
+				case 12: //DICIEMBRE
+					if(Day <1){
+						Day = 1;
+					}
+					if(Day >31){
+						Day = 31;
+					}
+				break;
 			}
 		}
 		void showDate(){
+			cout<<endl;
+			cout<<"Sus numeros enteros son: "<<endl;
 			cout<<"Anio: "<<Year<<endl;
     		cout<<"Mes: "<<Month<<endl;
     		cout<<"Dia: "<<Day<<endl;
@@ -75,13 +206,31 @@ class Date{
 };
 
 int main(){
-	char date[11]; //tamaño string
-    cout<<"Ingrese la fecha en formato YYYY/MM/DD: ";
-    cin.getline(date, 11); //Leemos el string
+	int opc = 1;
+	while(opc == 1){
+		char date[11];
+		system("cls");
+		cout<<"=================================================================="<<endl;
+		cout<<"                 Separador de fechas - Luis Mendoza"<<endl;
+		cout<<"=================================================================="<<endl;
+		cout<<endl;
+		cout<<"Informacion a tener en cuenta: "<<endl;
+		cout<<"- Dato de anio entre 2000 - 2099\n- Dato de mes entre 1 - 12\n- Dato de dia entre 1-31"<<endl;
+		cout<<endl;
+		cout<<"Formato YYYY/MM/DD"<<endl;
+		cout<<"Ingrese la fecha: ";
+		fflush(stdin);
+		cin.getline(date, 11); //Leemos el string
 
-    //Creamos el objeto y le asignamos el valor
-    Date a = Date(date);
-    
-    a.validaciones();  
-    return 0;
+    	//Creamos el objeto y le asignamos el valor
+    	Date a = Date(date);
+    	
+    	a.validaciones();
+
+    	cout<<endl;
+    	cout<<"Desea repetir el programa?"<<endl;
+    	cout<<"1. Si \n2. No"<<endl;
+    	cin>>opc;
+	}	
+	return 0;
 }   
