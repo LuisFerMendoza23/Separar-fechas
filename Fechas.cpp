@@ -25,11 +25,13 @@ Para determinar si un año es bisiesto, siga estos pasos:
 #include <iostream>
 #include <string.h>
 #include <stdlib.h>
+#include <sstream>
 using namespace std;
 
 class Date{
     private: //Atributos
         int Day, Month, Year, Bisiesto;
+		string dateInString = " ";
     public: //Metodos
         Date(char date[11]){ //Constructor
             char *p;            
@@ -42,24 +44,50 @@ class Date{
     		p = strtok(NULL, "/");//Valida que haya un / (delimitador) despues del string
         }
         void validaciones(){
-        	if(Year >1999 && Year <2100){
-        		anioBisiesto();
-        		if(Month >0 && Month <13){
-					validarMonth();
-        			if(Day >0 && Day <32){
-        				showDate();
-					}
-					else{
-					cout<<"\nDato fuera de rango"<<endl;
-					}
-				}
-				else{
-				cout<<"\nDato fuera de rango"<<endl;
-				}
+			validarYear();
+			validarMonth();
+			validarDay();
+		}
+		void validarDay(){
+			if(Day < 0){
+				Day = 0;
 			}
-			else{
-				cout<<"\nDato fuera de rango"<<endl;
+        	else if(Day >= 31 && (Month == 1||Month == 3||Month == 5||Month == 7||Month == 8||Month == 10||Month == 12)){
+				Month = Month +1;
+				Day = 0;
 			}
+			else if(Day >= 30 && (Month == 4||Month == 6||Month == 9||Month == 11)){
+				Month = Month+1;
+				Day = 0;
+			}
+			else if(Day >=28 && Month == 2){
+				Month = Month+1;
+				Day = 0
+				;
+			}
+			else if(Day >= 29 && Month ==2 && Bisiesto ==1){
+				Month = Month+1;
+				Day = 0;
+			}
+			
+		}
+		void validarMonth(){
+			if(Month < 1){
+				Month = 1;
+			}
+			if(Month >= 12 && Day == 31){
+				Year = Year+1;
+				Month = 1;
+				Day = 0;
+			}
+		}
+		void validarYear(){
+			if(Year < 2000){
+				Year = 2000;
+			}
+			if(Year > 2100){
+				Year = 2100;
+			}	
 		}
 		void anioBisiesto(){
 			if(Year %4 == 0){
@@ -87,122 +115,24 @@ class Date{
 				Bisiesto = 2;
 			}
 		}
-		void validarMonth(){
-			if(Month<0){
-				Month = 1;
-			}
-			else if(Month >12){
-				Month = 12;
-			}switch(Month){
-				case 1: //ENERO
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >31){
-						Day = 31;
-					}
-				break;
-				case 2: //FEBRERO
-					if(Bisiesto = 1){
-						if(Day >29){
-							Day = 29;
-						}
-					}
-					else if(Bisiesto = 2){
-						if(Day > 28){
-							Day = 28;
-						}
-					}
-				break;
-				case 3: //MARZO
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >31){
-						Day = 31;
-					}
-				break;
-				case 4: //ABRIL
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >30){
-						Day = 30;
-					}
-				break;
-				case 5: //MAYO
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >31){
-						Day = 31;
-					}
-				break;
-				case 6: //JUNIO
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >30){
-						Day = 30;
-					}
-				break;
-				case 7: //JULIO
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >31){
-						Day = 31;
-					}
-				break;
-				case 8: //AGOSTO
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >31){
-						Day = 31;
-					}
-				break;
-				case 9: //SEPTIEMBRE
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >30){
-						Day = 30;
-					}
-				break;
-				case 10: //OCTUBRE
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >31){
-						Day = 31;
-					}
-				break;
-				case 11: //NOVIEMBRE
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >30){
-						Day = 30;
-					}
-				break;
-				case 12: //DICIEMBRE
-					if(Day <1){
-						Day = 1;
-					}
-					if(Day >31){
-						Day = 31;
-					}
-				break;
-			}
-		}
 		void showDate(){
 			cout<<endl;
-			cout<<"Sus numeros enteros son: "<<endl;
+			//cout<<"Sus numeros enteros son: "<<endl;
 			cout<<"Anio: "<<Year<<endl;
     		cout<<"Mes: "<<Month<<endl;
     		cout<<"Dia: "<<Day<<endl;
-		} 
+		}
+		Date& operator ++(){  //PREFIX
+			Day++;
+			return *this;
+		}
+		operator const char*(){
+			ostringstream f;
+			f<<Year<<"/"<<Month<<"/"<<Day;
+			dateInString = f.str();
+			return dateInString.c_str();
+		}
+
 };
 
 int main(){
@@ -224,8 +154,22 @@ int main(){
 
     	//Creamos el objeto y le asignamos el valor
     	Date a = Date(date);
-    	
-    	a.validaciones();
+		
+		cout<<"\n";
+		cout<<"Sus numeros enteros antes del incremento son: "<<endl;		
+		a.showDate();
+
+		cout<<"\n";
+		cout<<a<<endl;
+		cout<<"\n";
+		a.anioBisiesto();
+		cout<<"\n";
+
+		for(int i=0; i<30; i++){
+			a.validaciones();
+			++a;
+			cout<<a<<endl;
+		}
 
     	cout<<endl;
     	cout<<"Desea repetir el programa?"<<endl;
